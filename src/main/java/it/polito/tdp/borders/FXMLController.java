@@ -2,8 +2,10 @@
 package it.polito.tdp.borders;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
+import it.polito.tdp.borders.model.CountryAndNumber;
 import it.polito.tdp.borders.model.Model;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -29,6 +31,26 @@ public class FXMLController {
     @FXML
     void doCalcolaConfini(ActionEvent event) {
 
+    	txtResult.clear();
+    	String annoS=txtAnno.getText();
+    	try {
+    		int anno=Integer.parseInt(annoS);
+    		model.creaGrafo(anno);
+    		txtResult.appendText(String.format("Numero componenti connesse: %d\n", model.getNumeroComponentiConnesse()));
+    		List<CountryAndNumber>countries=model.getCountryAndNumber();
+    		if(countries.size()==0) {
+    			txtResult.appendText("Non ci sono stati corrispondenti\n");
+    		}else {
+    			txtResult.appendText("Stati nell'anno "+anno+"\n");
+				for (CountryAndNumber c : countries) {
+					txtResult.appendText(String.format("%s %d\n",
+							c.getCountry().getStateName(), c.getNumber()));
+				}
+    		}
+    	}catch(NumberFormatException e){
+    		txtResult.appendText("Errore di formattazione dell'anno\\n");
+    		return;
+    	}
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
